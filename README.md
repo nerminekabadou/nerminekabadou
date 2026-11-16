@@ -10,11 +10,11 @@ ICT engineering student at **INSAT** (Tunis). I build **AI-powered software**: L
 
 | Project | What it is | Stack |
 |---|---|---|
-| [**AI Video Transcription & Q&A**](https://github.com/nerminekabadou/AI-Video-Transcription) | Upload a video, get its transcript, ask questions about it | Next.js · FastAPI · AssemblyAI · Llama 3.3 (Groq) |
+| [**AI Video Transcription & Q&A**](https://github.com/nerminekabadou/AI-Video-Transcription) | Upload a video, get its transcript, ask questions about it. **[▶ Live demo](https://ai-video-transcription.onrender.com)** | Next.js · FastAPI · AssemblyAI · Groq LLMs |
 | [**Dr.Chat**](https://github.com/nerminekabadou/Dr.Chat-by-NerAz) | Hospital assistant that turns questions into **guarded, read-only SQL** | LangChain · Gemini · FastAPI · Streamlit · PostgreSQL |
-| [**FIDChain**](https://github.com/nerminekabadou/FIDChain-Federated-Intrusion-Detection-System-with-Blockchain) | *Research project:* federated learning coordinated by an Ethereum smart contract, applied to Alzheimer's MRI classification | TensorFlow · Solidity · Brownie · IPFS |
+| [**FIDChain**](https://github.com/nerminekabadou/FIDChain-Federated-Intrusion-Detection-System-with-Blockchain) | *Research project:* federated learning coordinated by an Ethereum smart contract, applied to Alzheimer's MRI classification. Federated: 94.4%, centralized: 94.8%, without sharing images | TensorFlow · Solidity · Brownie · IPFS |
 | [**RoadToPro**](https://github.com/nerminekabadou/RoadToPro) | Real-time esports analytics with win-probability predictions (team hackathon) | LightGBM · Kafka · FastAPI · React |
-| [**Customer Review Analysis**](https://github.com/nerminekabadou/Customers-Review-Analysis) | Scraped e-commerce reviews, then classified their sentiment with classic NLP models and BERT | NLTK · scikit-learn · Transformers (BERT) |
+| [**Customer Review Analysis**](https://github.com/nerminekabadou/Customers-Review-Analysis) | Scraped e-commerce reviews, classified their sentiment (TF-IDF models vs fine-tuned CamemBERT), and found a label/language confound that inflated the scores | NLTK · scikit-learn · Transformers (BERT) |
 | [**ChronoAccess**](https://github.com/nerminekabadou/Automated-AWS-Access-Management) | Serverless AWS access requests with email approvals and scheduled IAM cleanup | AWS Lambda · DynamoDB · Terraform |
 
 ## Tech
