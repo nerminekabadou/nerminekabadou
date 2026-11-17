@@ -19,11 +19,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           owner="${{ github.repository_owner }}"
+          repos=$(gh repo list "$owner" --no-archived --limit 100 --json name --jq '.[].name')
+          echo "Scanning $(echo "$repos" | wc -w) repositories"
           body="Open dependency updates to review this month:"$'\n'
           total=0
-          for repo in $(gh repo list "$owner" --no-archived --limit 100 --json name --jq '.[].name'); do
-            prs=$(gh pr list -R "$owner/$repo" --author "app/dependabot" \
-                  --json number,title,url --jq '.[] | "- [ ] [\(.title)](\(.url))"')
+          for repo in $repos; do
+            # List PRs directly and filter by author: the search API behind
+            # `gh pr list --author` returns nothing with the workflow token.
+            prs=$(gh pr list -R "$owner/$repo" --state open --limit 100 --json title,url,author \
+                  --jq '.[] | select(.author.login | test("dependabot")) | "- [ ] [\(.title)](\(.url))"')
             if [ -n "$prs" ]; then
               body+=$'\n'"### $repo"$'\n'"$prs"$'\n'
               total=$((total + $(echo "$prs" | wc -l)))
@@ -31,4 +35,4 @@ jobs:
           done
           if [ "$total" -eq 0 ]; then echo "Nothing to review"; exit 0; fi
           gh issue create -R "${{ github.repository }}" \
-            --title "Maintenance: $total dependency updates ($(date +%B\ %Y))" --body "$body"
+            --title "Maintenance: $total dependency updates ($(date +'%B %Y'))" --body "$body"
