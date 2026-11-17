@@ -1,0 +1,63 @@
+name: monthly backlog issues
+
+# On the 5th of each month, propose the next issues from backlog/issues.json.
+# The "post" job waits for my approval (environment "backlog-approval" with me as
+# required reviewer), so GitHub Mobile sends me a notification: Approve posts the
+# issues and removes them from the queue; Reject posts nothing and keeps them
+# first in line for next month.
+on:
+  schedule:
+    - cron: "0 8 5 * *"
+  workflow_dispatch:
+
+env:
+  PER_MONTH: 2
+
+jobs:
+  propose:
+    runs-on: ubuntu-latest
+    outputs:
+      count: ${{ steps.next.outputs.count }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: next
+        name: Pick the next issues
+        run: |
+          count=$(jq "[.[0:$PER_MONTH][]] | length" backlog/issues.json)
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Issues proposed this month"
+            echo
+            jq -r ".[0:$PER_MONTH][] | \"### \(.title)\n**Repository:** \(.repo)\n\n\(.body)\n\"" backlog/issues.json
+            echo "_$(jq length backlog/issues.json) issues left in the backlog._"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  post:
+    needs: propose
+    if: needs.propose.outputs.count != '0'
+    runs-on: ubuntu-latest
+    environment: backlog-approval
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create the approved issues
+        env:
+          GH_TOKEN: ${{ secrets.BACKLOG_TOKEN }}
+        run: |
+          owner="${{ github.repository_owner }}"
+          for i in $(seq 0 $(( ${{ needs.propose.outputs.count }} - 1 ))); do
+            repo=$(jq -r ".[$i].repo" backlog/issues.json)
+            title=$(jq -r ".[$i].title" backlog/issues.json)
+            jq -r ".[$i].body" backlog/issues.json > body.md
+            url=$(gh issue create -R "$owner/$repo" --title "$title" --body-file body.md)
+            echo "- [$title]($url)" >> "$GITHUB_STEP_SUMMARY"
+          done
+      - name: Remove them from the backlog
+        run: |
+          jq ".[${{ needs.propose.outputs.count }}:]" backlog/issues.json > tmp.json && mv tmp.json backlog/issues.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add backlog/issues.json
+          git commit -m "chore: posted ${{ needs.propose.outputs.count }} backlog issues"
+          git push

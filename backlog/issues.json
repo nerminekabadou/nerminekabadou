@@ -1,0 +1,82 @@
+[
+  {
+    "repo": "AI-Video-Transcription",
+    "title": "Fix the failing grouped npm update (#3)",
+    "body": "Dependabot's grouped npm update fails CI. Merge the security updates first, then find which package breaks the build (lint or Next.js build) and fix or pin it."
+  },
+  {
+    "repo": "Dr.Chat-by-NerAz",
+    "title": "Create a read-only database role in the PostgreSQL setup docs",
+    "body": "The README recommends a SELECT-only user but doesn't show how.\n\n- [ ] SQL script creating a role with `SELECT` on the four tables only\n- [ ] document it in the README\n- [ ] use it in `security/fuzz_guard.py --postgres`"
+  },
+  {
+    "repo": "FIDChain-Federated-Intrusion-Detection-System-with-Blockchain",
+    "title": "Non-IID experiment: does similarity weighting help with skewed hospitals?",
+    "body": "The current benchmark uses a random (IID) split, where similarity weighting can't show its benefit.\n\n- [ ] split by class so each hospital sees a different label mix (e.g. Dirichlet α=0.5)\n- [ ] rerun `scripts/offchain_benchmark.py` for all strategies\n- [ ] add results to the README"
+  },
+  {
+    "repo": "Customers-Review-Analysis",
+    "title": "Evaluate on French reviews only",
+    "body": "Until new data is collected, report results restricted to the scraped French reviews (4 vs 5 stars, or positive vs not) so the score isn't driven by language detection."
+  },
+  {
+    "repo": "AI-Video-Transcription",
+    "title": "Limit video duration, not only file size",
+    "body": "Uploads are limited to 25 MB, but a long low-bitrate video still costs transcription minutes.\n\n- [ ] read the duration with ffprobe after upload\n- [ ] reject videos over a configurable `MAX_VIDEO_MINUTES`\n- [ ] test"
+  },
+  {
+    "repo": "AWS_SecurityAudit_CISBenchmarks",
+    "title": "Enable the logging checks (CIS 3.x)",
+    "body": "`Core/Checks/logging_audit.py` implements CIS 3.1–3.9 but is commented out in the orchestrator. Test it, enable it, and add it to the README table."
+  },
+  {
+    "repo": "Dr.Chat-by-NerAz",
+    "title": "Add indirect prompt-injection attacks (instructions hidden in the data)",
+    "body": "All current attacks come from the user's question. Add rows to the demo data that contain instructions (e.g. a medication description saying \"ignore your rules and…\") and measure whether the answer step follows them.\n\n- [ ] new attack category in `security/attack_prompts.py`\n- [ ] seed data with injected text\n- [ ] report results"
+  },
+  {
+    "repo": "Automated-AWS-Access-Management",
+    "title": "Merge the scheduled cleanup into main",
+    "body": "The `Scheduled-Cleanup` branch now validates and has tests. Merge it with the request workflow so access is granted and revoked by the same system."
+  },
+  {
+    "repo": "FIDChain-Federated-Intrusion-Detection-System-with-Blockchain",
+    "title": "Run each strategy with several seeds and report mean ± std",
+    "body": "Results are from a single seed; differences of ~1 point are within noise.\n\n- [ ] `--seeds` option in the benchmark\n- [ ] error bars in the chart"
+  },
+  {
+    "repo": "AI-Video-Transcription",
+    "title": "Docker Compose for local development",
+    "body": "One command to run the frontend and backend locally with hot reload.\n\n- [ ] `docker-compose.yml` with both services\n- [ ] document in the README"
+  },
+  {
+    "repo": "Dr.Chat-by-NerAz",
+    "title": "Benchmark a larger hosted model (Gemini Flash) on the attack prompts",
+    "body": "The security benchmark (`security/`) only covers two small local models.\n\n- [ ] add a Gemini option to `security/attack_llm.py` (respect free-tier rate limits)\n- [ ] run the 90 attack prompts and 20 legitimate questions\n- [ ] add the results to `security/README.md`"
+  },
+  {
+    "repo": "AWS_SecurityAudit_CISBenchmarks",
+    "title": "Unit tests for the CIS checks with moto",
+    "body": "Use moto to create compliant and non-compliant resources and assert each check's status."
+  },
+  {
+    "repo": "FIDChain-Federated-Intrusion-Detection-System-with-Blockchain",
+    "title": "Robustness experiment: one noisy or malicious hospital",
+    "body": "Add a hospital with shuffled labels (or scaled weights) and compare plain averaging vs similarity-weighted aggregation. This is the scenario the method is designed for."
+  },
+  {
+    "repo": "Customers-Review-Analysis",
+    "title": "Collect negative and neutral reviews from the same source",
+    "body": "The benchmark showed the classes are confounded with language (negatives are Tunisian Arabizi, positives scraped French). Scrape 1–3 star reviews from the same shop, in French, and rerun `experiments/run_benchmark.py`."
+  },
+  {
+    "repo": "Automated-AWS-Access-Management",
+    "title": "Provision the approved IAM policy automatically",
+    "body": "On `main`, approving a request only sets its status to APPROVED.\n\n- [ ] attach the policy from `PolicyTemplatesTable` to the requester\n- [ ] record when access expires\n- [ ] tests with mocked IAM"
+  },
+  {
+    "repo": "AI-Video-Transcription",
+    "title": "Stream the answer instead of waiting for the full response",
+    "body": "Use Groq's streaming API and server-sent events so the answer appears word by word."
+  }
+]
