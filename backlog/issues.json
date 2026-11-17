@@ -1,15 +1,5 @@
 [
   {
-    "repo": "AI-Video-Transcription",
-    "title": "Fix the failing grouped npm update (#3)",
-    "body": "Dependabot's grouped npm update fails CI. Merge the security updates first, then find which package breaks the build (lint or Next.js build) and fix or pin it."
-  },
-  {
-    "repo": "Dr.Chat-by-NerAz",
-    "title": "Create a read-only database role in the PostgreSQL setup docs",
-    "body": "The README recommends a SELECT-only user but doesn't show how.\n\n- [ ] SQL script creating a role with `SELECT` on the four tables only\n- [ ] document it in the README\n- [ ] use it in `security/fuzz_guard.py --postgres`"
-  },
-  {
     "repo": "FIDChain-Federated-Intrusion-Detection-System-with-Blockchain",
     "title": "Non-IID experiment: does similarity weighting help with skewed hospitals?",
     "body": "The current benchmark uses a random (IID) split, where similarity weighting can't show its benefit.\n\n- [ ] split by class so each hospital sees a different label mix (e.g. Dirichlet α=0.5)\n- [ ] rerun `scripts/offchain_benchmark.py` for all strategies\n- [ ] add results to the README"
