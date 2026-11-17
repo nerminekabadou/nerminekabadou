@@ -1,0 +1,34 @@
+name: monthly maintenance digest
+
+# On the 1st of each month, open one issue listing the open Dependabot PRs
+# across my repositories, as a to-do list for reviewing and merging them.
+on:
+  schedule:
+    - cron: "0 8 1 * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build the digest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          owner="${{ github.repository_owner }}"
+          body="Open dependency updates to review this month:"$'\n'
+          total=0
+          for repo in $(gh repo list "$owner" --no-archived --limit 100 --json name --jq '.[].name'); do
+            prs=$(gh pr list -R "$owner/$repo" --author "app/dependabot" \
+                  --json number,title,url --jq '.[] | "- [ ] [\(.title)](\(.url))"')
+            if [ -n "$prs" ]; then
+              body+=$'\n'"### $repo"$'\n'"$prs"$'\n'
+              total=$((total + $(echo "$prs" | wc -l)))
+            fi
+          done
+          if [ "$total" -eq 0 ]; then echo "Nothing to review"; exit 0; fi
+          gh issue create -R "${{ github.repository }}" \
+            --title "Maintenance: $total dependency updates ($(date +%B\ %Y))" --body "$body"
