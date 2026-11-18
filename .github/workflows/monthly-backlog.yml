@@ -1,6 +1,8 @@
 name: monthly backlog issues
 
 # On the 5th of each month, propose the next issues from backlog/issues.json.
+# After approval, each issue is created with an "@claude" request, so Claude
+# implements it, a PR is opened, and its merge waits for my approval too.
 # The "post" job waits for my approval (environment "backlog-approval" with me as
 # required reviewer), so GitHub Mobile sends me a notification: Approve posts the
 # issues and removes them from the queue; Reject posts nothing and keeps them
@@ -51,7 +53,9 @@ jobs:
             title=$(jq -r ".[$i].title" backlog/issues.json)
             jq -r ".[$i].body" backlog/issues.json > body.md
             url=$(gh issue create -R "$owner/$repo" --title "$title" --body-file body.md)
-            echo "- [$title]($url)" >> "$GITHUB_STEP_SUMMARY"
+            # Posted in my name, so the repo's Claude workflow starts working on it.
+            gh issue comment "$url" --body "@claude please implement this issue: make the change, add or update tests where it makes sense, and run the project's checks before pushing."
+            echo "- [$title]($url): Claude started" >> "$GITHUB_STEP_SUMMARY"
           done
       - name: Remove them from the backlog
         run: |
